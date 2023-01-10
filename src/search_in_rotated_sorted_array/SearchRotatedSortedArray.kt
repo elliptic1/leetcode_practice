@@ -1,6 +1,13 @@
 package search_in_rotated_sorted_array
 
+import sun.jvm.hotspot.utilities.Assert
+
 fun main() {
+    test()
+}
+
+fun test() {
+    println(Solution().search(intArrayOf(4, 5, 6, 7, 0, 1, 2), 0))
 
 }
 
@@ -14,8 +21,8 @@ class Solution {
         // repeat
 
         // index pointers
-        var left = 0
-        var right = nums.lastIndex
+        val left = 0
+        val right = nums.lastIndex
 
         while (left < right) {
 
@@ -28,35 +35,40 @@ class Solution {
                 return -1
             } else {
 
-                val middle = kotlin.math.floor((right-left)/2f).toInt()
+                val middle = kotlin.math.floor((right - left) / 2f).toInt()
 
-                // check left
-                if (left < middle) {
+                // check left for pivot
+                val ans1 = if (left <= middle) {
                     // no pivot
-                    if (left <= target && target <= middle) {
-                        right = middle
-                    } else {
-
-                    }
+                    left + nums
+                        .slice(left..middle)
+                        .binarySearch(target)
                 } else {
-                    // check right
-                    if (middle < right) {
-                        // no pivot
-                        if (middle <= target && target <= right) {
-                            left = middle
-                        } else {
+                    search(nums.slice(left..middle).toIntArray(), target)
+                }
 
-                        }
-                    }
+                if (ans1 > -1) {
+                    return ans1
+                }
+
+                // check right
+                val ans2 = if (middle <= right) {
+                    // no pivot
+                    middle + nums
+                        .slice(middle..right)
+                        .binarySearch(target)
+                } else {
+                    search(nums.slice(middle..right).toIntArray(), target)
+                }
+
+                if (ans2 > -1) {
+                    return ans2
                 }
 
             }
-
         }
 
         return -1
 
     }
-
-
 }
